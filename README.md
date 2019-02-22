@@ -1,8 +1,14 @@
 # Data-Quality-for-Data-Science-Using-SAS
-Considerations and best practices for data quality in the context of data science, analytics and machine learning and how to implement this with SAS Software. Companion and Download Site for the SAS Press Book "Data Quality for Analytics Using SAS" by Gerhard Svolba. [SAS-Press-Website](https://www.sas.com/store/prodBK_63164_en.html?storeCode=SAS_US&storeCode=SAS_US) [amazon.com-Website](https://www.amazon.com/Data-Quality-Analytics-Using-SAS-ebook/dp/B00WXMV62E/ref=pd_rhf_se_s_pd_crcd_0_5/260-7083297-0994303?_encoding=UTF8&pd_rd_i=B00WXMV62E&pd_rd_r=8d45d3bb-c0b1-44ac-a1e8-11496b72c252&pd_rd_w=C5qfy&pd_rd_wg=86ogE&pf_rd_p=c6269878-d677-4a89-a68c-ff0df2b6ce6c&pf_rd_r=ER2CDAPEZ2YZ598YXGYV&psc=1&refRID=ER2CDAPEZ2YZ598YXGYV)
+Considerations and best practices for data quality in the context of data science, analytics and machine learning and how to implement this with SAS Software. Companion and Download Site for the SAS Press Book "Data Quality for Analytics Using SAS" by Gerhard Svolba.
+[SAS-Press-Website](https://www.sas.com/store/prodBK_63164_en.html?storeCode=SAS_US&storeCode=SAS_US) 
+[amazon.com-Website](https://www.amazon.com/Data-Quality-Analytics-Using-SAS-ebook/dp/B00WXMV62E/ref=pd_rhf_se_s_pd_crcd_0_5/260-7083297-0994303?_encoding=UTF8&pd_rd_i=B00WXMV62E&pd_rd_r=8d45d3bb-c0b1-44ac-a1e8-11496b72c252&pd_rd_w=C5qfy&pd_rd_wg=86ogE&pf_rd_p=c6269878-d677-4a89-a68c-ff0df2b6ce6c&pf_rd_r=ER2CDAPEZ2YZ598YXGYV&psc=1&refRID=ER2CDAPEZ2YZ598YXGYV)
 
-[Paper Want an Early Picture of the Data Quality Status of Your Analysis Data?
+* [SGF-Paper: Want an Early Picture of the Data Quality Status of Your Analysis Data?
 SAS® Visual Analytics Shows You How](https://support.sas.com/resources/papers/proceedings15/SAS1440-2015.pdf)
+* [Other books](https://support.sas.com/en/books/authors/gerhard-svolba.html) from Gerhard Svolba at SAS Press.
+** [Data Preparation for Data Science Using SAS](https://github.com/gerhard1050/Data-Preparation-for-Data-Science-Using-SAS)
+** [Data Quality for Data Science Using SAS](https://github.com/gerhard1050/Data-Quality-for-Data-Science-Using-SAS)
+** [Applying Data Science - Business Case Studies Using SAS](https://github.com/gerhard1050/Applying-Data-Science-Using-SAS)
 
 ## Main focus of this book --> Analytics and Data Science
 My intention was not to write another book on data quality in general, but to write the first book that deals with data quality from the viewpoint of a data scientist, statistician, data miner, engineer, operations researcher, or other analytically minded problem-solver.
