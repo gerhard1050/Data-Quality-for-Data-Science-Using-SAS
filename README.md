@@ -6,7 +6,6 @@ SAS® Visual Analytics Shows You How](https://support.sas.com/resources/papers/p
 * [Interview on Data Preparation and Data Quality for Analytics with Gerhard Svolba](https://www.youtube.com/playlist?list=PLVBcK_IpFVi_55dDL_JozF9J9_BQJ1p7-)
 * [Other books](https://support.sas.com/en/books/authors/gerhard-svolba.html) from Gerhard Svolba at SAS Press.
 * [Data Preparation for Data Science Using SAS](https://github.com/gerhard1050/Data-Preparation-for-Data-Science-Using-SAS)
-* [Data Quality for Data Science Using SAS](https://github.com/gerhard1050/Data-Quality-for-Data-Science-Using-SAS)
 * [Applying Data Science - Business Case Studies Using SAS](https://github.com/gerhard1050/Applying-Data-Science-Using-SAS)
 
 ## Main focus of this book --> Analytics and Data Science
