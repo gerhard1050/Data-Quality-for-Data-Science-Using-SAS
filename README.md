@@ -1,3 +1,5 @@
+<img src='DQFA_Cover_klein.jpg' align='right' height="200">
+
 # Data-Quality-for-Data-Science-Using-SAS
 Considerations and best practices for data quality in the context of data science, analytics and machine learning and how to implement this with SAS Software. Companion and Download Site for the [SAS Press Book](https://www.sas.com/store/prodBK_63164_en.html?storeCode=SAS_US&storeCode=SAS_US)  "Data Quality for Analytics Using SAS" by Gerhard Svolba. [--> amazon.com](https://www.amazon.com/Data-Quality-Analytics-Using-SAS-ebook-dp-B00AY1AQUY/dp/B00AY1AQUY/)
 
