@@ -4,16 +4,16 @@ Considerations and best practices for data quality in the context of data scienc
 - [SAS-Press-Website](https://www.sas.com/store/prodBK_63164_en.html?storeCode=SAS_US&storeCode=SAS_US) 
 - [amazon.com-Website](https://www.amazon.com/Data-Quality-Analytics-Using-SAS-ebook/dp/B00WXMV62E/ref=pd_rhf_se_s_pd_crcd_0_5/260-7083297-0994303?_encoding=UTF8&pd_rd_i=B00WXMV62E&pd_rd_r=8d45d3bb-c0b1-44ac-a1e8-11496b72c252&pd_rd_w=C5qfy&pd_rd_wg=86ogE&pf_rd_p=c6269878-d677-4a89-a68c-ff0df2b6ce6c&pf_rd_r=ER2CDAPEZ2YZ598YXGYV&psc=1&refRID=ER2CDAPEZ2YZ598YXGYV)
 
-[Paper Efficient “One-Row-per-Subject” Data Mart Construction
-for Data Mining  @SAS Global Forum](https://support.sas.com/resources/papers/proceedings15/SAS1440-2015.pdf)
+[Paper Want an Early Picture of the Data Quality Status of Your Analysis Data?
+SAS® Visual Analytics Shows You How](https://support.sas.com/resources/papers/proceedings15/SAS1440-2015.pdf)
 
 ## Main focus of this book --> Analytics and Data Science
 My intention was not to write another book on data quality in general, but to write the first book that deals with data quality from the viewpoint of a data scientist, statistician, data miner, engineer, operations researcher, or other analytically minded problem-solver.
 Data quality is getting a lot of attention in the market. However, most of the initiatives, publications, and papers on data quality focus on classical data quality topics, such as elimination of duplicates, standardization of data, lists of values, value ranges, and plausibility checks. It will not be said here that these topics are not important for analytics; on the contrary, they build the foundation of data for analysis. However, there are many aspects of data that are specific to analytics. And these aspects are important to differentiate whether data are suitable for analysis or not.
 
 The following points are the main focus of this book:
-•	Usability and availability of data for analysis
-•	Selection of the right data sources
+* Usability and availability of data for analysis
+*	Selection of the right data sources
 •	Explaining why analytical methods need historic data and also historic snapshots of the data
 •	Ensuring sufficient data quantity in terms of number of observations, number of event cases, and length of data history
 •	Typical analyses: predictive analytics and statistics, including time series analysis and time series forecasting
