@@ -5,7 +5,7 @@ Considerations and best practices for data quality in the context of data scienc
 
 * [SGF-Paper: Want an Early Picture of the Data Quality Status of Your Analysis Data?
 SAS® Visual Analytics Shows You How](https://support.sas.com/resources/papers/proceedings15/SAS1440-2015.pdf)
-* [Interview on Data Preparation and Data Quality for Analytics with Gerhard Svolba](https://www.youtube.com/playlist?list=PLVBcK_IpFVi_55dDL_JozF9J9_BQJ1p7-)
+* [SGF-Presentation 2015](https://github.com/gerhard1050/DataScience-Presentations-By-Gerhard/blob/master/118_DataQualityForAnalyticsUsingSAS_Svolba.pdf)
 * [Other books](https://support.sas.com/en/books/authors/gerhard-svolba.html) from Gerhard Svolba at SAS Press.
 * [Data Preparation for Data Science Using SAS](https://github.com/gerhard1050/Data-Preparation-for-Data-Science-Using-SAS)
 * [Applying Data Science - Business Case Studies Using SAS](https://github.com/gerhard1050/Applying-Data-Science-Using-SAS)
