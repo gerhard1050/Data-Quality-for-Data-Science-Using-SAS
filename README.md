@@ -6,6 +6,8 @@ Considerations and best practices for data quality in the context of data scienc
 * [SGF-Paper: Want an Early Picture of the Data Quality Status of Your Analysis Data?
 SAS® Visual Analytics Shows You How](https://support.sas.com/resources/papers/proceedings15/SAS1440-2015.pdf)
 * [SGF-Presentation 2015](https://github.com/gerhard1050/DataScience-Presentations-By-Gerhard/blob/master/118_DataQualityForAnalyticsUsingSAS_Svolba.pdf)
+* [The structure of MISSING VALUES in your data - get a clearer picture with the %MV_PROFILING macro](https://communities.sas.com/t5/SAS-Communities-Library/The-structure-of-MISSING-VALUES-in-your-data-get-a-clearer/ta-p/712770)
+* [“Rosetta Stone” — The most important text sample in history and the role of labeled data in machine learning](https://gerhard-svolba.medium.com/rosetta-stone-the-most-important-text-sample-in-history-and-the-role-of-labeled-data-in-a890c782344c)
 * [Other books](https://support.sas.com/en/books/authors/gerhard-svolba.html) from Gerhard Svolba at SAS Press.
 * [Data Preparation for Data Science Using SAS](https://github.com/gerhard1050/Data-Preparation-for-Data-Science-Using-SAS)
 * [Applying Data Science - Business Case Studies Using SAS](https://github.com/gerhard1050/Applying-Data-Science-Using-SAS)
