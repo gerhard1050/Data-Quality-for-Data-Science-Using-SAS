@@ -7,9 +7,9 @@ Considerations and best practices for data quality in the context of data scienc
 SAS® Visual Analytics Shows You How](https://support.sas.com/resources/papers/proceedings15/SAS1440-2015.pdf)
 * [SGF-Presentation 2015](https://github.com/gerhard1050/DataScience-Presentations-By-Gerhard/blob/master/118_DataQualityForAnalyticsUsingSAS_Svolba.pdf)
 * SAS Communities Articles
-** [The structure of MISSING VALUES in your data - get a clearer picture with the %MV_PROFILING macro](https://communities.sas.com/t5/SAS-Communities-Library/The-structure-of-MISSING-VALUES-in-your-data-get-a-clearer/ta-p/712770)
-** [Using the TIMESERIES procedure to check the continuity of your timeseries data](https://communities.sas.com/t5/SAS-Communities-Library/Using-the-TIMESERIES-procedure-to-check-the-continuity-of-your/ta-p/714678)
-** [Replace MISSING VALUES in TIMESERIES DATA using PROC EXPAND and PROC TIMESERIES](https://communities.sas.com/t5/SAS-Communities-Library/Replace-MISSING-VALUES-in-TIMESERIES-DATA-using-PROC-EXPAND-and/ta-p/714806)
+  * [The structure of MISSING VALUES in your data - get a clearer picture with the %MV_PROFILING macro](https://communities.sas.com/t5/SAS-Communities-Library/The-structure-of-MISSING-VALUES-in-your-data-get-a-clearer/ta-p/712770)
+  * [Using the TIMESERIES procedure to check the continuity of your timeseries data](https://communities.sas.com/t5/SAS-Communities-Library/Using-the-TIMESERIES-procedure-to-check-the-continuity-of-your/ta-p/714678)
+  * [Replace MISSING VALUES in TIMESERIES DATA using PROC EXPAND and PROC TIMESERIES](https://communities.sas.com/t5/SAS-Communities-Library/Replace-MISSING-VALUES-in-TIMESERIES-DATA-using-PROC-EXPAND-and/ta-p/714806)
 
 * [“Rosetta Stone” — The most important text sample in history and the role of labeled data in machine learning](https://gerhard-svolba.medium.com/rosetta-stone-the-most-important-text-sample-in-history-and-the-role-of-labeled-data-in-a890c782344c)
 * [Other books](https://support.sas.com/en/books/authors/gerhard-svolba.html) from Gerhard Svolba at SAS Press.
