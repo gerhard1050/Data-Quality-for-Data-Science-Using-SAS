@@ -803,3 +803,372 @@ run;
 
 %mend;
 
+/**************************************************************************
+*** TS_History_Check -- see Appendix D – Macro to determine the optimal length of the available data history
+***************************************************************************/
+
+
+*** 2022-01-25: added YAXIS Min=0 for the lineplot;
+** optimal lenght chart: changed from a barchart to a histogram and added the minhist and the maxhist macro variable for the histogram;
+** bugfix: SHIFT was only considered for the loop, but not for shifting the timewindow;
+
+
+
+%macro TS_History_Check(data=,tsid=tsid,y=qty,timeid=monyear,  
+                   interval=month, minhist=1,maxhist=48,
+                   shiftfrom=0,shiftto=12,shiftby=1,periodvalid=12,
+                   mrep=sashelp.hpfdflt,sellist=tsfsselect,  
+                   stat=mape,aggrstat=median);
+
+
+title "%UPCASE(&aggrstat.) %UPCASE(&stat.) Plot by Timeseries Length (&minhist. - &maxhist.)";
+title2 "Source Data: &data. | Validationinterval = &periodvalid. | Shifts: (&shiftfrom TO &shiftto BY &shiftby)"; 
+
+/*** Part I - Prepare Data for the Analysis ***/
+*** Calculate the number of observations per time series; 
+proc means data=&data noprint nway;
+ class &tsid;
+ var &y;
+ output out=ts_count(drop = _type_ _freq_) n=_count_obs_;
+run;
+
+*** Join the number of observations to the base table;
+proc sql noprint;
+ create table _Hist_check_tmp_
+ as select a.*, b._count_obs_
+    from &data as a
+	left join ts_count as b
+	on a.tsid = b.tsid
+    order by a.&tsid., a.&timeid.;
+quit;
+
+*** Generate _LEAD_ variable;
+data _Hist_check_tmp_;
+ set _Hist_check_tmp_;
+ by &tsid;
+ if first.tsid then _idx_=1;
+ else _idx_+1;
+ _lead_ = -(_count_obs_-_idx_)-1;
+ drop _idx_;
+run;
+
+*** Generate Empty Template table for appending the MAPE values;
+data mape_base;
+ set &data(keep=&tsid);
+ format mape 16.8 rmse 16.8 shift 8. history 8.;
+ delete; 
+run; 
+
+
+/*** Iterate Scenarios ***/
+
+%do shift = &shiftfrom. %to &shiftto. %by &shiftby.;
+  %do history = &minhist. %to &maxhist.;
+              *** only leave the observations in the table that are needed for the analysis;
+			  data _Hist_check_tmp_input_;
+			   set _Hist_check_tmp_(where = (_count_obs_ >= &minHist.));
+			   _y_valid_ = &y.;
+			   if _lead_*(-1) <= (&periodvalid + &shift.) then &y.       = .;    
+			   if _lead_*(-1) > (&periodvalid + &shift. + &history) then delete;
+%* version before bugfix on 2022-01-25;
+%*			   if _lead_*(-1) <= &periodvalid  then &y.       = .;    
+%*			   if _lead_*(-1) > (&periodvalid + &history) then delete;
+			  run;
+
+			/*** Forecast the Szenario ***/
+			proc hpfengine   data = _Hist_check_tmp_input_
+			                 out=_out_
+			                 outfor = _Hist_check_tmp_fc_
+				               (drop = lower upper error std)	
+						 	 modelrepository = &mrep
+			                 globalselection = &sellist
+						     lead = &periodvalid back=0
+			                 task = select(criterion = &stat 
+			                 minobs=(season=1) 
+			                 seasontest = none
+			                 ) ;
+			by &tsid; 
+			id &timeid interval = &interval;
+			forecast &y;
+			run;
+
+            proc delete data=_out_;run;
+			
+            *** Join Forecast Values with original 
+                values for MAPE calculation; 
+			proc sql;
+			 create table _Hist_check_tmp_fc_xt_
+			 as select a.*,b._lead_,b._y_valid_
+			    from _Hist_check_tmp_fc_(drop = _name_) as a
+			    left join _Hist_check_tmp_input_ as b 
+			        on a.&tsid. = b.&tsid.
+			       and a.&timeid. = b.&timeid.
+                order by &tsid., &timeid.;
+			quit;
+
+			/**** Validate the Szenario ****/
+			** Calculate the mean;
+			data _ape_;
+			  set _Hist_check_tmp_fc_xt_;
+			  _FC_Period_ = (_lead_*(-1) <= &periodvalid);
+			  _APE_ = abs(predict-_y_valid_)/_y_valid_;
+			  _MS_  = (predict-_y_valid_)**2;
+			run;
+
+			proc means data = _ape_(rename = 
+                                     (_ape_ = mape _ms_ = _mse_)) 
+                                 noprint nway;
+			 class &tsid _fc_period_;
+			 var mape _mse_;
+			 output out = _mape_(drop=_type_ _freq_ 
+                            where=(_fc_period_=1)) mean=;
+			run;
+
+			data _mape_;
+			 set _mape_;
+			 rmse = _mse_ ** 0.5;
+			 drop _mse_;
+			 shift=&shift;
+			 History=&history;
+			 drop _fc_period_;
+			run;
+
+      *** Append the results of this run;
+    proc append base=mape_base  data=_mape_ force nowarn;
+	  run;
+
+  %end; ** Hist Loop; 			 
+%end; ** SHIFT LOOP;
+
+*** Aggregate data per time history;
+proc means data = mape_base noprint nway;
+ class history;
+ var rmse mape;
+ output out = _mape_aggr_(drop=_type_ _freq_) &aggrstat=;
+run;
+
+*** Output the results;
+proc print data=_mape_aggr_ noobs;
+run;
+
+*** Lineplot;
+proc sgplot data = _mape_aggr_;
+ series x=history y=&stat;
+ yaxis min=0;
+run;
+
+*** Calculate the number of optimal history months;
+proc sort data = mape_base;
+ by &tsid shift history;
+run;
+
+data BestHistory;
+ set mape_base(where=(mape ne .));
+ by &tsid shift;
+ retain BestHistory MinMAPE;
+ if first.shift then do; BestHistory = History;
+                         MinMAPE = MAPE;
+					 end;
+ if MAPE < MinMAPE then do;
+                           BestHistory = History;
+ 			               MinMAPE = MAPE;
+					 end;
+ if last.shift then output;
+run;
+
+title "Distribution of Best History Lengths";
+title2 "Source Data: &data. | Validationinterval = &periodvalid. | Shifts: (&shiftfrom TO &shiftto BY &shiftby)"; 
+
+proc sgplot data=BestHistory;
+ histogram BestHistory / binwidth=1;
+ xaxis label="Best Length of History" min=&minhist. max=&maxhist.;
+ yaxis min=0;
+run;
+
+title; title2;
+
+%mend;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**************************************************************************
+*** %TS_HISTORY_CHECK_ESM -- see Appendix D – Macro to determine the optimal length of the available data history
+***************************************************************************/
+
+%macro TS_History_Check_ESM(data=,tsid=tsid,y=qty,timeid=monyear,interval=month,
+                        minhist=1,maxhist=48,shiftfrom=0,shiftto=12,shiftby=1,periodvalid=12,
+                        stat=mape,aggrstat=median,seasonality=12,model=seasonal);
+
+
+title "%UPCASE(&aggrstat.) %UPCASE(&stat.) Plot by Timeseries Length (&minhist. - &maxhist.)";
+title2 "Source Data: &data. | Validationinterval = &periodvalid. | Shifts: (&shiftfrom TO &shiftto BY &shiftby)"; 
+
+
+/*** Part I - Prepare Data for the Analysis ***/
+*** Calculate the number of observations per time series; 
+proc means data=&data noprint nway;
+ class &tsid;
+ var &y;
+ output out=ts_count(drop = _type_ _freq_) n=_count_obs_;
+run;
+
+*** Join the number of observations to the base table;
+proc sql noprint;
+ create table _Hist_check_tmp_
+ as select a.*, b._count_obs_
+    from &data as a
+	left join ts_count as b
+	on a.tsid = b.tsid
+    order by a.&tsid., a.&timeid.;
+quit;
+
+*** Generate _LEAD_ variable;
+data _Hist_check_tmp_;
+ set _Hist_check_tmp_;
+ by &tsid;
+ if first.tsid then _idx_=1;
+ else _idx_+1;
+ _lead_ = -(_count_obs_-_idx_)-1;
+ drop _idx_;
+run;
+
+*** Generate Empty Demplate table for appending the MAPE values;
+data mape_base;
+ set &data(keep=&tsid);
+ format mape 16.8 rmse 16.8 shift 8. history 8.;
+ delete; 
+run; 
+
+
+/*** Iterate Scenarios ***/
+
+%do shift = &shiftfrom. %to &shiftto. %by &shiftby.;
+  %do history = &minhist. %to &maxhist.;
+              *** only leave the observations in the table that are needed for the analysis;
+			  data _Hist_check_tmp_input_;
+			   set _Hist_check_tmp_(where = (_count_obs_ >= &minHist.));
+			   _y_valid_ = &y.;
+			   if _lead_*(-1) <= (&periodvalid + &shift.) then &y.       = .;    
+			   if _lead_*(-1) > (&periodvalid + &shift. + &history) then delete;
+%* version before bugfix on 2022-01-25;
+%*			   if _lead_*(-1) <= &periodvalid  then &y.       = .;    
+%*			   if _lead_*(-1) > (&periodvalid + &history) then delete;
+			  run;
+
+			/*** Forecast the Szenario ***/
+            proc esm data=_Hist_check_tmp_input_ out=_out_
+			              outfor = _Hist_check_tmp_fc_(drop = lower upper error std)	
+                          seasonality=&seasonality lead=&periodvalid;
+              by &tsid; 
+		      id &timeid interval = &interval;
+              forecast &y/model=&model;
+            run;
+			
+            proc delete data=_out_;run;
+			
+            *** Join Forecast Values with original values for MAPE calculation; 
+			proc sql;
+			 create table _Hist_check_tmp_fc_xt_
+			 as select a.*,b._lead_,b._y_valid_
+			    from _Hist_check_tmp_fc_(drop = _name_) as a
+			    left join _Hist_check_tmp_input_ as b 
+			        on a.&tsid. = b.&tsid. 
+			       and a.&timeid. = b.&timeid.
+                order by &tsid., &timeid.;
+			quit;
+
+
+			/**** Validate the Szenario ****/
+			** Calculate the mean;
+			data _ape_;
+			  set _Hist_check_tmp_fc_xt_;
+			  _FC_Period_ = (_lead_*(-1) <= &periodvalid);
+			  _APE_ = abs(predict-_y_valid_)/_y_valid_;
+			  _MS_  = (predict-_y_valid_)**2;
+			run;
+
+			proc means data = _ape_(rename = (_ape_ = mape _ms_ = _mse_)) noprint nway;
+			 class &tsid _fc_period_;
+			 var mape _mse_;
+			 output out = _mape_(drop=_type_ _freq_ where=(_fc_period_=1)) mean=;
+			run;
+
+			data _mape_;
+			 set _mape_;
+			 rmse = _mse_ ** 0.5;
+			 drop _mse_;
+			 shift=&shift;
+			 History=&history;
+			 drop _fc_period_;
+			run;
+
+      *** Append the results of this run;
+      proc append base=mape_base  data=_mape_ force nowarn;
+	  run;
+
+  %end; ** Hist Loop; 			 
+%end; ** SHIFT LOOP;
+
+*** Aggregate data per time history;
+proc means data = mape_base noprint nway;
+ class history;
+ var rmse mape;
+ output out = _mape_aggr_(drop=_type_ _freq_) &aggrstat=;
+run;
+
+*** Output the results;
+proc print data=_mape_aggr_ noobs;
+run;
+
+*** Lineplot;
+proc sgplot data = _mape_aggr_;
+ series x=history y=&stat;
+ yaxis min=0;
+run;
+
+*** Calculate the number of optimal history months;
+proc sort data = mape_base;
+ by &tsid shift history;
+run;
+
+data BestHistory;
+ set mape_base(where=(mape ne .));
+ by &tsid shift;
+ retain BestHistory MinMAPE;
+ if first.shift then do; BestHistory = History;
+                         MinMAPE = MAPE;
+					 end;
+ if MAPE < MinMAPE then do;
+                           BestHistory = History;
+ 			               MinMAPE = MAPE;
+					 end;
+ if last.shift then output;
+run;
+
+title "Distribution of Best History Lengths";
+title2 "Source Data: &data. | Validationinterval = &periodvalid. | Shifts: (&shiftfrom TO &shiftto BY &shiftby)"; 
+
+
+proc sgplot data=BestHistory;
+ histogram BestHistory / binwidth=1;
+ xaxis label="Best Length of History" min=&minhist. max=&maxhist.;
+ yaxis min=0;
+run;
+
+%mend;
